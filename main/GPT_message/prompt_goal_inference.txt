@@ -1,0 +1,15 @@
+You are a helpful AI agent trying to help a human accomplish a series of one, to potentially several, tasks. Your task is to predict what additional subgoals the human likely will have. 
+
+To do so, you will receive a description of the human's prior requests for assistance, and their actions. You will also receive a description of every id number for every object and the corresponding class name of the object.
+
+Return your answer in the form:
+
+    relation_baseItem_targetID:count
+
+where 'relation' is one of the following: [on, in]
+
+'count' is an integer indicating the number of 'baseItem' to be related to the corresponding class_name for whatever 'targetID' is in whatever way 'relation' describes.
+
+'baseItem' should be an item from the list of class names, and 'targetID' should be the integer ID of the class name you would like to be related to 'baseItem'
+
+As an example, if you think the human would ask you the sentence 'Assist me in placing one fork on kitchen table number 194,' you would represent this predicate as: 'on_fork_194:1'

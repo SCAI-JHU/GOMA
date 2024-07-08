@@ -1,0 +1,6 @@
+anytree==2.12.1
+backoff==2.2.1
+ipdb==0.13.13
+openai==0.28.1
+opencv-python==4.10.0.84
+termcolor==2.4.0

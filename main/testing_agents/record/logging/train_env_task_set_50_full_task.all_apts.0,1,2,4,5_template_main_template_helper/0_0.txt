@@ -1,0 +1,31 @@
+Error
+Traceback (most recent call last):
+  File "/weka/scratch/weka/tenenbaum/lanceyin/GOMA/main/testing_agents/test_template_agent_structured.py", line 344, in <module>
+    success, steps, saved_info = arena.run(
+  File "/weka/scratch/weka/tenenbaum/lanceyin/GOMA/main/testing_agents/../algos/arena_mp2.py", line 916, in run
+    ) = self.step()
+  File "/weka/scratch/weka/tenenbaum/lanceyin/GOMA/main/testing_agents/../algos/arena_mp2.py", line 845, in step
+    dict_actions, dict_messages, dict_info = self.get_actions(
+  File "/weka/scratch/weka/tenenbaum/lanceyin/GOMA/main/testing_agents/../algos/arena_mp2.py", line 282, in get_actions
+    ) = agent.get_action(
+  File "/weka/scratch/weka/tenenbaum/lanceyin/GOMA/main/testing_agents/../agents/MCTS_agent_particle_v2_instance_human_message.py", line 1599, in get_action
+    plan, root_node, subgoals = get_plan(
+  File "/weka/scratch/weka/tenenbaum/lanceyin/GOMA/main/testing_agents/../agents/MCTS_agent_particle_v2_instance_human_message.py", line 882, in get_plan
+    info_item.re_raise()
+  File "/weka/scratch/weka/tenenbaum/lanceyin/GOMA/main/testing_agents/../utils/utils_exception.py", line 24, in re_raise
+    raise self.ee.with_traceback(self.tb)
+  File "/weka/scratch/weka/tenenbaum/lanceyin/GOMA/main/testing_agents/../agents/MCTS_agent_particle_v2_instance_human_message.py", line 784, in mp_run_mcts
+    res = new_mcts.run(
+  File "/weka/scratch/weka/tenenbaum/lanceyin/GOMA/main/testing_agents/../MCTS/MCTS_particles_v2_instance.py", line 201, in run
+    curr_node, actions = self.expand(curr_node, tmp_t, curr_state)
+  File "/weka/scratch/weka/tenenbaum/lanceyin/GOMA/main/testing_agents/../MCTS/MCTS_particles_v2_instance.py", line 948, in expand
+    expanded_leaf_node, current_child_actions = self.initialize_children(
+  File "/weka/scratch/weka/tenenbaum/lanceyin/GOMA/main/testing_agents/../MCTS/MCTS_particles_v2_instance.py", line 1148, in initialize_children
+    action_heuristic, _, action_heuristic_name = heuristic(
+  File "/weka/scratch/weka/tenenbaum/lanceyin/GOMA/main/testing_agents/../agents/MCTS_agent_particle_v2_instance_human_message.py", line 312, in put_heuristic
+    grab_obj1, cost_grab_obj1, heuristic_name = grab_heuristic(
+  File "/weka/scratch/weka/tenenbaum/lanceyin/GOMA/main/testing_agents/../agents/MCTS_agent_particle_v2_instance_human_message.py", line 170, in grab_heuristic
+    find_actions, find_costs, _ = find_heuristic(
+  File "/weka/scratch/weka/tenenbaum/lanceyin/GOMA/main/testing_agents/../agents/MCTS_agent_particle_v2_instance_human_message.py", line 67, in find_heuristic
+    raise Exception
+Exception

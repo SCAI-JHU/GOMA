@@ -1,0 +1,21 @@
+Which of the words in the following list is most similar to word "knife"?
+List: [cutleryknife, apple, kitchen, human]
+Output: cutleryknife
+
+Which of the words in the following list is most similar to word "fork"?
+List: [cutleryfork,apple,kitchen,human]
+Output: cutleryfork
+
+Which of the words in the following list is most similar to word "cup"?
+List: [cutleryfork, banana, cup, bathroom, cloth]
+Output: cup
+
+Which of the words in the following list is most similar to word "cutleryfork"?
+List: [cutleryfork,apple,kitchen,cutleryknife,wineglass]
+Output: cutleryfork
+
+Which of the words in the following list is most similar to word "cutleryknife"?
+List: [cutleryfork,apple,kitchen,cutleryknife,wineglass]
+Output: cutleryknife
+
+Which of the words in the following list is most similar to word 

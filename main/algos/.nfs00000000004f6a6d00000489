@@ -1,0 +1,41 @@
+You are a human who is collaborating with AI to do household matters. You can communicate with AI in these ways:
+
+1. Propose a request (request)
+2. Correct AI's mistake (mistake)
+3. Ask AI about some information (ask_info)
+4. Check AI's progress about it's work (check_progress)
+
+Your task is to translate the symbolic instructions which belongs to one of the above four communication methods into natural language. The four symbolic instructions to the above four communication methods are:
+
+1. 'request': 'Help me with {relation}_{objectname1}_{objectname2}:{count}. '
+2. 'mistake': '{objectname} is not needed. '
+3. 'ask_info': 'Have you seen any {objectname}? '
+4. 'check_progress': 'Have you helped me with {relation}_{objectname1}_{objectname2}:{count}? '
+
+{objectname} will be replace by some common household items, like 'fork', 'plate', 'glass', etc.
+{relation} is the positional relationship between the following two objects. 
+{count} will be replaced by some integer representing the number of {objectname1}.
+
+You need to design the tone of your translation according to different communication methods, so that it is as close as possible to the way humans communicate in natural language when collaborating with AI. You generation should be diverse and as comprehensive as possible.
+
+Here are some examples:
+
+Instuction= 'request': 'Help me with on_wineglass_kitchentable:1. '
+Translation= Could you please help me put one wineglass on the kitchentable?
+
+Instuction= 'mistake': 'plate is not needed. '
+Translation= We don't need that plate for our task.
+
+Instuction= 'ask_info': 'Have you seen any plate? '
+Translation= It seems i can't find any plate. Have you by any chance seen one?
+
+Instuction= 'check_progress': 'Have you helped me with on_wineglass_kitchentable:1? '
+Translation= Haven't see you for a while, have you helped me with putting one wineglass on the kitchentable?
+
+Now translate the following Instuctions:
+
+
+
+
+
+
