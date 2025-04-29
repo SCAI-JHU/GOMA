@@ -6,7 +6,7 @@ from tqdm import tqdm
 import traceback
 import os
 import ipdb
-from pickle5 import pickle
+import pickle
 import json
 import pdb
 import random
@@ -49,6 +49,11 @@ def get_class_mode(agent_args):
     )
     return mode_str
 
+def get_path_from_env(var_name):
+    path = os.getenv(var_name)
+    assert path and os.path.exists(path)
+    return path
+
 
 if __name__ == "__main__":
     args = get_args()
@@ -56,9 +61,13 @@ if __name__ == "__main__":
     save_data = False
     num_tries = 1
 
-    args.executable_file = "/scratch2/weka/tenenbaum/kunaljha/virtualhome/virtualhome/simulation/unity_simulator/linux_exec.v2.2.4.x86_64"
+    args.executable_file = get_path_from_env("VH_BIN")
 
-    args.dataset_path = "/scratch2/weka/tenenbaum/lanceyin/GOMA/train_env_task_set.pik"
+    goma_path = get_path_from_env("GOMA_PATH")
+    args.dataset_path = os.path.join(goma_path, "train_env_task_set.pik")
+    
+    step_dir = os.path.join(goma_path, "outputs/step")
+    os.makedirs(step_dir, exist_ok=True)
     
     args.max_episode_length = 100
 
@@ -350,8 +359,8 @@ if __name__ == "__main__":
 
                         # out_dir = "/data/vision/torralba/frames/data_acquisition/SyntheticStories/MultiAgent/project_lance/watch_talk_help/testing_agents/output_steps/"+ str(args.model) + ".npy"
                         if success:
-                            with open(f"/data/vision/torralba/frames/data_acquisition/SyntheticStories/MultiAgent/project_lance/watch_talk_help/testing_agents/output_steps/{args.model}_steps.txt", "a") as text_file:
-                                text_file.write("episode "+str(episode_id)+ ": " + str(steps))
+                            with open(os.path.join(step_dir, f"{args.model}_steps.txt"), "a") as text_file:
+                                text_file.write("episode "+str(episode_id)+ ": " + str(steps) + "\n")
 
                             proceed = True
 
@@ -416,8 +425,10 @@ if __name__ == "__main__":
                                 with open(log_file_name, "w+") as f:
                                     f.write(json.dumps(saved_info, indent=4))
 
-                        logger.removeHandler(logger.handlers[0])
-                        os.remove(failure_file)
+                        try:
+                            logger.removeHandler(logger.handlers[0])
+                            os.remove(failure_file)
+                        except Exception as e: ...
 
                     except utils_exception.UnityException as e:
                         traceback.print_exc()

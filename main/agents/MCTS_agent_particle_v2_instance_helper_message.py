@@ -1141,7 +1141,7 @@ class MCTS_agent_particle_v2_instance_helper_message:
         'stock_fridge_k:n' : ['inside_pudding_k': n,'inside_cupcake_k': n, 'inside_salmon_k': n, 'on_apple_k': n]
 
         """
-        prompt += f"\n Based on the human actions {self.action_history}, and your own subgoal {own_goal_spec}, please infer the most likely goal in the format of 'goal_k:n' where goal is one of [setup_table, get_food, load_dishwasher, stock_fridge] and both k and n are integers. \nOutput: "
+        prompt += f"\n Based on the human actions {self.action_history}, and your own subgoal {own_goal_spec}, please infer the most likely goal in the format of 'goal_k:n' where goal is one of [setup_table, get_food, load_dishwasher, stock_fridge] and both k and n are integers. **k must be an integer**\nOutput: "
         # print(prompt)
 
         response = gpt_message_encoder.generate_chat_response(prompt, temperature=0).strip("'").strip('"')
@@ -1150,15 +1150,21 @@ class MCTS_agent_particle_v2_instance_helper_message:
             # return response
         
 
-        inferred_message = response
-        inferred_predicate = inferred_message.split(":")[0]
-        count = inferred_message.split(":")[1]
+        inferred_message = response.split("\n")[-1]
+        inferred_predicate = inferred_message.split(":")[-2]
+        count = inferred_message.split(":")[-1]
         inferred_correct = True
 
+        inferred_predicate = "".join(
+            [c for c in inferred_predicate
+             if any([c.isdigit(), c == "_", c.isalpha()])])
+        count = "".join([c for c in count if c.isdigit()])
 
         count = int(count)
         print(own_goal_spec, "owngoal")
         dest = inferred_predicate.split("_")[-1]
+        if not dest.isdigit():
+            raise ValueError(f"Invalid destination: {dest}")
         goal = inferred_predicate.split("_")[0] + "_" + inferred_predicate.split("_")[1]
 
         subgoal_set = {
@@ -1235,7 +1241,7 @@ class MCTS_agent_particle_v2_instance_helper_message:
                     time.sleep(2)
 
             
-            output=output.replace('\n', '')
+            output=output.replace('\n', '').replace('```', '').replace('json', '')
             output=json.loads(output)
 
             # print("output", output)

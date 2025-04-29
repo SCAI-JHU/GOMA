@@ -545,7 +545,7 @@ def template_share_info(
             except:
                 time.sleep(2)
 
-        output=output.replace('\n', '')
+        output=output.replace('\n', '').replace('```', '').replace('json', '')
         output=json.loads(output)
 
         if output["message_type"] == "ask_info":
@@ -1255,7 +1255,7 @@ class MCTS_agent_particle_v2_instance_human_message:
                     time.sleep(2)
 
             
-            output=output.replace('\n', '')
+            output=output.replace('\n', '').replace('```', '').replace('json', '')
             output=json.loads(output)
 
             # print("human_output", output)

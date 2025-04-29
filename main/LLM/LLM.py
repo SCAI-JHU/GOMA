@@ -1,6 +1,8 @@
 import random
 
-import openai
+from openai import OpenAI
+
+client = OpenAI()
 import torch
 import json
 import os
@@ -55,7 +57,9 @@ class LLM:
         self.comm_list = []
 
         if self.source == 'openai':
-            
+            # openai.api_key = os.getenv("OPENAI_KEY")
+
+
             if self.chat:
                 self.sampling_params = {
                     "max_tokens": sampling_parameters.max_tokens,
@@ -85,32 +89,30 @@ class LLM:
                 if source == 'openai':
                     try:
                         if self.chat:
-                            response = openai.ChatCompletion.create(
-                                model=lm_id, messages=prompt, **sampling_params
-                            )
+                            response = client.chat.completions.create(model=lm_id, messages=prompt, **sampling_params)
                             time.sleep(0.2)
                             # print(json.dumps(response, indent=4))
                             if self.debug:
                                 with open(f"LLM/chat_raw.json", 'a') as f:
                                     f.write(json.dumps(response, indent=4))
                                     f.write('\n')
-                            generated_samples = [response['choices'][i]['message']['content'] for i in
+                            generated_samples = [response.choices[i].message.content for i in
                                                  range(sampling_params['n'])]
                             if 'gpt-4' in self.lm_id:
-                                usage = response['usage']['prompt_tokens'] * 0.03 / 1000 + response['usage']['completion_tokens'] * 0.06 / 1000
+                                usage = response.usage.prompt_tokens * 0.03 / 1000 + response.usage.completion_tokens * 0.06 / 1000
                             elif 'gpt-3.5' in self.lm_id:
-                                usage = response['usage']['total_tokens'] * 0.002 / 1000
+                                usage = response.usage.total_tokens * 0.002 / 1000
                         # mean_log_probs = [np.mean(response['choices'][i]['logprobs']['token_logprobs']) for i in
                         #                 range(sampling_params['n'])]
                         elif "text-" in lm_id:
-                            response = openai.Completion.create(model=lm_id, prompt=prompt, **sampling_params)
+                            response = client.completions.create(model=lm_id, prompt=prompt, **sampling_params)
                             time.sleep(0.2)
                             # print(json.dumps(response, indent=4))
                             if self.debug:
                                 with open(f"LLM/raw.json", 'a') as f:
                                     f.write(json.dumps(response, indent=4))
                                     f.write('\n')
-                            generated_samples = [response['choices'][i]['text'] for i in range(sampling_params['n'])]
+                            generated_samples = [response.choices[i].text for i in range(sampling_params['n'])]
                         # mean_log_probs = [np.mean(response['choices'][i]['logprobs']['token_logprobs']) for i in
                         #             range(sampling_params['n'])]
                         else:
@@ -297,7 +299,7 @@ class LLM:
                     all_satisfied_items.append(f"<{class_name}> ({id_num})")
         if len(all_satisfied_items):
             s = f"{'I' if self.single else 'We'}'ve already found and put " + ', '.join(all_satisfied_items) + ' ' + self.goal_location_with_r + '. '
-                
+
 
 
         # if len(satisfied) == 0:
@@ -370,14 +372,14 @@ class LLM:
                     available_plans.append(f"[gograb] <{obj['class_name']}> ({obj['id']})")
         if len(grabbed_objects) > 0:
             available_plans.append(f"[goput] {self.goal_location}")
-        
+
         plans = ""
         for i, plan in enumerate(available_plans):
             plans += f"{chr(ord('A') + i)}. {plan}\n"
 
         return plans, len(available_plans), available_plans
 
-            
+
     def run(self, current_room, grabbed_objects, satisfied, unchecked_containers, ungrabbed_objects, goal_location_room, action_history, dialogue_history, opponent_grabbed_objects, opponent_last_room, room_explored, helper_obs, human_obs, graph):
         info = {}
 
@@ -453,7 +455,7 @@ class LLM:
             for item, loc in self.helper_belief.items():
                 if id2node[item]["class_name"] in candidate_categories and item not in self.comm_list:
                     edgeStrings.append(f"[{id2node[item]['class_name']}({item}) {loc[1]} {id2node[loc[0]]['class_name']}({loc[0]})]")
-            
+
             str_option = "[ \n"
             str_helper = "[ \n"
 
@@ -470,7 +472,7 @@ class LLM:
             for edge in human_obs["edges"]:
                 if edge['from_id'] in id2node.keys() and edge['to_id'] in id2node.keys() and "GRABBABLE" in id2node[edge['from_id']]["properties"] and id2node[edge['to_id']]["category"]!="Rooms" and edge['relation_type']!="CLOSE" and edge['relation_type']!="FACING" and id2node[edge['from_id']]["class_name"] in candidate_categories:
                     edgeStrings.append(f"{id2node[edge['from_id']]['class_name']}({edge['from_id']})")
-            
+
             str_main = "[ \n"
             for s in edgeStrings:
                 item 
@@ -497,7 +499,7 @@ class LLM:
             outputs, usage = self.generator(chat_prompt if self.chat else prompt_message, self.sampling_params)
             message = outputs[0]
 
-            
+
             # if not action_history[-1].startswith('[send_message]'):
             #     gen_prompt = self.generator_prompt_template.replace('$GOAL$', self.goal_desc)
             #     gen_prompt = gen_prompt.replace('$PROGRESS$', progress_desc)
@@ -508,7 +510,7 @@ class LLM:
             #     gen_prompt = gen_prompt + f"\n{self.agent_name}:"
 
             #     self.total_cost += usage
-                
+
             #     info['message_generator_prompt'] = gen_prompt
             #     info['message_generator_outputs'] = outputs
             #     info['message_generator_usage'] = usage
