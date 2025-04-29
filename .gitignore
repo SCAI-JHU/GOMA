@@ -169,7 +169,7 @@ __pycache__/*
 models/__pycache__/*
 util/__pycache__/*
 tools/__pycache__/*
-record/*
+record
 record_*/*
 port_*.txt
 **/Logs/*
